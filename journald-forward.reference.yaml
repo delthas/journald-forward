@@ -1,0 +1,17 @@
+irc_address: "example.com:12345" # host:port ; or irc+insecure://host:port for plaintext
+irc_nickname: "nick" # IRC nickname, defaults to journald-forward
+irc_username: "user" # IRC username, defaults to the nickname
+irc_password: "pass" # IRC server password
+irc_channel: "#channel" # IRC channel
+irc_channel_password: "channel-password" # IRC channel key
+match: # OR-list of matchers against each log entry; first matcher matching will be used; if none match the log entry is dropped
+  # Each matcher is an AND-list of regular expressions matched against the journald fields.
+  # To build your own, use `journalctl -o export`, which displays all fields and values
+  - KEY: "^value$" # Log all entries with "KEY" having value "value"
+  # A capturing group can be specified in the MESSAGE regular expression to use that as the message sent to IRC
+  - KEY: "^value$"
+    MESSAGE: "error: (.*)" # Matches and skips the "error: " prefix
+  # The special, journald-forward-specific __REPLACE regular expression enables rendering a template with the message capturing groups"
+  - KEY: "^value$"
+    MESSAGE: "error: (.*)" # Matches and skips the "error: " prefix
+    __REPLACE: "[My Service] $1" # Add the header "[My service]", followed by the extracted capturing group

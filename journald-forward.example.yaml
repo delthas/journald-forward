@@ -1,0 +1,8 @@
+irc_address: "irc.libera.chat"
+irc_channel: "#monitoring"
+match:
+  - _SYSTEMD_UNIT: "^my.service"
+    MESSAGE: "^.*? .*? (.*)$" # Trim first two space-separated fields, take the remainder
+    __REPLACE: "\x02[My Service]\x02 $1" # Add a pretty bold header, followed by the extracted message
+  - "_EXE": "/daemon$"
+    "PRIORITY": "^(6|7|8|9)$"
